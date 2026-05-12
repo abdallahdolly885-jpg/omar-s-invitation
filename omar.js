@@ -1,60 +1,68 @@
-window.addEventListener("DOMContentLoaded", () => {
+const openBtn = document.getElementById('openBtn');
+const introScreen = document.getElementById('introScreen');
+const music = document.getElementById('bgMusic');
+const musicBtn = document.getElementById('musicBtn');
 
-  const openBtn = document.getElementById('openBtn');
-  const introScreen = document.getElementById('introScreen');
-  const music = document.getElementById('bgMusic');
-  const musicBtn = document.getElementById('musicBtn');
+let musicStarted = false;
 
-  /* حماية لو العنصر مش موجود */
-  if (!openBtn || !introScreen || !music || !musicBtn) {
-    console.log("Missing elements in HTML");
-    return;
+
+function startMusic() {
+  if (!musicStarted) {
+    music.play().then(() => {
+      musicStarted = true;
+    }).catch(err => {
+      console.log("Autoplay blocked:", err);
+    });
+  }
+}
+
+/* OPEN INVITATION */
+openBtn.addEventListener('click', () => {
+
+  startMusic();
+
+  introScreen.style.opacity = '0';
+
+  setTimeout(() => {
+    introScreen.style.display = 'none';
+  }, 1000);
+
+});
+
+
+/* MUSIC BUTTON */
+musicBtn.addEventListener('click', () => {
+
+  if (music.paused) {
+    music.play();
+    musicBtn.innerHTML = '♪';
+  } else {
+    music.pause();
+    musicBtn.innerHTML = '🔇';
   }
 
-  /* الصوت */
-  music.volume = 0.5;
+});
 
-  /* OPEN INVITATION */
-  openBtn.onclick = () => {
 
-    music.play().catch(() => {});
+/* SCROLL ANIMATIONS */
+const elements = document.querySelectorAll('.fade-up, .fade-left, .fade-right');
 
-    introScreen.style.opacity = '0';
+window.addEventListener('scroll', () => {
 
-    setTimeout(() => {
-      introScreen.style.display = 'none';
-    }, 1000);
+  elements.forEach((el) => {
 
-  };
+    const top = el.getBoundingClientRect().top;
 
-  /* MUSIC BUTTON */
-  musicBtn.onclick = () => {
-
-    if (music.paused) {
-      music.play();
-      musicBtn.innerHTML = '♪';
-    } else {
-      music.pause();
-      musicBtn.innerHTML = '🔇';
+    if (top < window.innerHeight - 100) {
+      el.classList.add('show');
     }
-
-  };
-
-  /* SCROLL ANIMATION */
-  const elements = document.querySelectorAll('.fade-up, .fade-left, .fade-right');
-
-  window.addEventListener('scroll', () => {
-
-    elements.forEach((el) => {
-
-      const top = el.getBoundingClientRect().top;
-
-      if (top < window.innerHeight - 100) {
-        el.classList.add('show');
-      }
-
-    });
 
   });
 
 });
+
+
+
+document.addEventListener("click", () => {
+  startMusic();
+}, { once: true });
