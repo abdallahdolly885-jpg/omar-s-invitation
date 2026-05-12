@@ -3,54 +3,51 @@ const introScreen = document.getElementById('introScreen');
 const music = document.getElementById('bgMusic');
 const musicBtn = document.getElementById('musicBtn');
 
-let started = false;
+/* OPEN INVITATION */
 
-/* 🔥 تشغيل مضمون جدًا */
-function startAudio() {
-  if (started) return;
+openBtn.onclick = () => {
 
-  music.volume = 0.5;
-
-  const p = music.play();
-
-  if (p !== undefined) {
-    p.then(() => {
-      started = true;
-      musicBtn.innerHTML = '♪';
-    }).catch(err => {
-      console.log("blocked:", err);
-    });
-  }
-}
-
-/* OPEN BUTTON (ده أهم Trigger) */
-openBtn.addEventListener('click', () => {
-
-  startAudio();
+  music.play();
 
   introScreen.style.opacity = '0';
 
-  setTimeout(() => {
+  setTimeout(()=>{
     introScreen.style.display = 'none';
-  }, 800);
+  },1000)
 
-});
+}
 
+/* MUSIC BUTTON */
 
-/* MUSIC TOGGLE */
-musicBtn.addEventListener('click', () => {
+musicBtn.onclick = () => {
 
-  if (music.paused) {
-    startAudio();
-  } else {
+  if(music.paused){
+    music.play();
+    musicBtn.innerHTML = '♪';
+  }else{
     music.pause();
     musicBtn.innerHTML = '🔇';
   }
 
-});
+}
 
+/* SCROLL ANIMATIONS */
 
-/* 🔥 IMPORTANT: fallback واحد فقط */
-window.addEventListener('pointerdown', () => {
-  startAudio();
+const elements = document.querySelectorAll('.fade-up, .fade-left, .fade-right');
+
+window.addEventListener('scroll',()=>{
+
+  elements.forEach((el)=>{
+
+    const top = el.getBoundingClientRect().top;
+
+    if(top < window.innerHeight - 100){
+      el.classList.add('show');
+    }
+
+  })
+
+})
+document.body.addEventListener("click", function () {
+  document.getElementById("bgMusic").play();
 }, { once: true });
