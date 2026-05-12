@@ -1,49 +1,59 @@
-const openBtn = document.getElementById('openBtn');
-const introScreen = document.getElementById('introScreen');
-const music = document.getElementById('bgMusic');
-const musicBtn = document.getElementById('musicBtn');
+window.addEventListener("DOMContentLoaded", () => {
 
-/* تحسين الصوت */
-music.volume = 0.5;
+  const openBtn = document.getElementById('openBtn');
+  const introScreen = document.getElementById('introScreen');
+  const music = document.getElementById('bgMusic');
+  const musicBtn = document.getElementById('musicBtn');
 
-/* OPEN INVITATION */
-openBtn.onclick = () => {
-
-  music.play().catch(() => {});
-
-  introScreen.style.opacity = '0';
-
-  setTimeout(() => {
-    introScreen.style.display = 'none';
-  }, 1000);
-
-};
-
-/* MUSIC BUTTON */
-musicBtn.onclick = () => {
-
-  if (music.paused) {
-    music.play();
-    musicBtn.innerHTML = '♪';
-  } else {
-    music.pause();
-    musicBtn.innerHTML = '🔇';
+  /* حماية لو العنصر مش موجود */
+  if (!openBtn || !introScreen || !music || !musicBtn) {
+    console.log("Missing elements in HTML");
+    return;
   }
 
-};
+  /* الصوت */
+  music.volume = 0.5;
 
-/* SCROLL ANIMATIONS */
-const elements = document.querySelectorAll('.fade-up, .fade-left, .fade-right');
+  /* OPEN INVITATION */
+  openBtn.onclick = () => {
 
-window.addEventListener('scroll', () => {
+    music.play().catch(() => {});
 
-  elements.forEach((el) => {
+    introScreen.style.opacity = '0';
 
-    const top = el.getBoundingClientRect().top;
+    setTimeout(() => {
+      introScreen.style.display = 'none';
+    }, 1000);
 
-    if (top < window.innerHeight - 100) {
-      el.classList.add('show');
+  };
+
+  /* MUSIC BUTTON */
+  musicBtn.onclick = () => {
+
+    if (music.paused) {
+      music.play();
+      musicBtn.innerHTML = '♪';
+    } else {
+      music.pause();
+      musicBtn.innerHTML = '🔇';
     }
+
+  };
+
+  /* SCROLL ANIMATION */
+  const elements = document.querySelectorAll('.fade-up, .fade-left, .fade-right');
+
+  window.addEventListener('scroll', () => {
+
+    elements.forEach((el) => {
+
+      const top = el.getBoundingClientRect().top;
+
+      if (top < window.innerHeight - 100) {
+        el.classList.add('show');
+      }
+
+    });
 
   });
 
