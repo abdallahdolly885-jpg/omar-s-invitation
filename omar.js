@@ -3,29 +3,30 @@ const introScreen = document.getElementById('introScreen');
 const music = document.getElementById('bgMusic');
 const musicBtn = document.getElementById('musicBtn');
 
-let isPlaying = false;
+let started = false;
 
-function playMusic() {
+/* 🔥 تشغيل مضمون جدًا */
+function startAudio() {
+  if (started) return;
+
   music.volume = 0.5;
 
-  const playPromise = music.play();
+  const p = music.play();
 
-  if (playPromise !== undefined) {
-    playPromise
-      .then(() => {
-        isPlaying = true;
-        musicBtn.innerHTML = '♪';
-      })
-      .catch((err) => {
-        console.log("Play blocked:", err);
-      });
+  if (p !== undefined) {
+    p.then(() => {
+      started = true;
+      musicBtn.innerHTML = '♪';
+    }).catch(err => {
+      console.log("blocked:", err);
+    });
   }
 }
 
-/* OPEN BUTTON */
+/* OPEN BUTTON (ده أهم Trigger) */
 openBtn.addEventListener('click', () => {
 
-  playMusic();
+  startAudio();
 
   introScreen.style.opacity = '0';
 
@@ -36,11 +37,11 @@ openBtn.addEventListener('click', () => {
 });
 
 
-/* MUSIC BUTTON */
+/* MUSIC TOGGLE */
 musicBtn.addEventListener('click', () => {
 
   if (music.paused) {
-    playMusic();
+    startAudio();
   } else {
     music.pause();
     musicBtn.innerHTML = '🔇';
@@ -49,23 +50,7 @@ musicBtn.addEventListener('click', () => {
 });
 
 
-document.addEventListener('click', function firstClick() {
-  playMusic();
-  document.removeEventListener('click', firstClick);
-});
-
-
-/* Scroll animations */
-const elements = document.querySelectorAll('.fade-up, .fade-left, .fade-right');
-
-window.addEventListener('scroll', () => {
-
-  elements.forEach((el) => {
-    const top = el.getBoundingClientRect().top;
-
-    if (top < window.innerHeight - 100) {
-      el.classList.add('show');
-    }
-  });
-
-});
+/* 🔥 IMPORTANT: fallback واحد فقط */
+window.addEventListener('pointerdown', () => {
+  startAudio();
+}, { once: true });
